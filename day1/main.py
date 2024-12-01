@@ -12,13 +12,28 @@ with open(inputFile) as f:
 
 
 def parse(line):
-    return line
+    return line.split()
+
 
 def part1():
-    pass
+    l1 = [int(parse(line)[0]) for line in input]
+    l2 = [int(parse(line)[1]) for line in input]
+    l1.sort()
+    l2.sort()
+
+    sum = 0
+    for i in range(len(l1)):
+        sum += abs(l1[i]-l2[i])
+    return sum
+
 
 def part2():
-    pass
+    l1 = [int(parse(line)[0]) for line in input]
+    l2 = [int(parse(line)[1]) for line in input]
+    sum = 0
+    for val in l1:
+        sum += val * l2.count(val)
+    return sum
 
 
 def main():

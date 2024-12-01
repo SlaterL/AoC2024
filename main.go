@@ -21,7 +21,6 @@ var (
 		RunE:  runDay,
 		Args:  cobra.MinimumNArgs(1),
 	}
-	year = "2023"
 )
 
 type Day struct {
@@ -30,7 +29,8 @@ type Day struct {
 
 func main() {
 	rootCmd.AddCommand(dayCmd)
-	rootCmd.PersistentFlags().StringP("session", "s", "", "optional session token")
+	rootCmd.PersistentFlags().StringP("session", "s", "53616c7465645f5f34b82f39e2d7865d94084c338aeb434b8c1d523807410ea4572825b767ea25ff5bbc4e9b4b384decedbd18a3ef013dccb1d96bcd8fc8a92f", "optional session token")
+	rootCmd.PersistentFlags().StringP("year", "y", "2024", "specify what year of AoC")
 
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
@@ -44,17 +44,21 @@ func runDay(command *cobra.Command, args []string) error {
 	if sessionErr != nil {
 		return sessionErr
 	}
-	if session == "" {
-		session = "53616c7465645f5f34b82f39e2d7865d94084c338aeb434b8c1d523807410ea4572825b767ea25ff5bbc4e9b4b384decedbd18a3ef013dccb1d96bcd8fc8a92f"
-	}
 	day := args[0]
 
-	input, inputErr := getInput(day, session)
+	year, yearErr := command.Flags().GetString("year")
+	if yearErr != nil {
+		return yearErr
+	}
+
+	input, inputErr := getInput(day, year, session)
 	if inputErr != nil {
 		return inputErr
 	}
+	fmt.Println("Got Input")
 
 	createFileStructure(day, input)
+	fmt.Println("Created File Structure")
 
 	return nil
 }
@@ -87,7 +91,7 @@ func createFileStructure(day, input string) error {
 	return nil
 }
 
-func getInput(day, session string) (string, error) {
+func getInput(day, year, session string) (string, error) {
 	cookie := &http.Cookie{
 		Name:  "session",
 		Value: session,
@@ -114,6 +118,8 @@ func getInput(day, session string) (string, error) {
 			return "", err
 		}
 		bodyString = string(bodyBytes)
+	} else {
+		return "", fmt.Errorf("Bad response from AoC: %v, via %s", resp.StatusCode, url)
 	}
 	return bodyString, nil
 }
