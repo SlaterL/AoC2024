@@ -2,7 +2,7 @@ from sys import argv
 
 input = []
 
-inputFile = "test/input.txt"
+inputFile = "day1/test/input.txt"
 if "-t" in argv:
     testInputIndex = argv.index("-t")
     inputFile = "test/" + argv[testInputIndex+1]

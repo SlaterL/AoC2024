@@ -5,6 +5,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/spf13/cobra"
 )
@@ -83,6 +84,7 @@ func createFileStructure(day, input string) error {
 	if err != nil {
 		return err
 	}
+	pyText = []byte(strings.ReplaceAll(string(pyText), "!day!", dayDir))
 	err = os.WriteFile(dayDir+"/main.py", pyText, 0755)
 	if err != nil {
 		return err

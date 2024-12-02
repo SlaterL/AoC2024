@@ -2,10 +2,10 @@ from sys import argv
 
 input = []
 
-inputFile = "test/input.txt"
+inputFile = "!day!/test/input.txt"
 if "-t" in argv:
     testInputIndex = argv.index("-t")
-    inputFile = "test/" + argv[testInputIndex+1]
+    inputFile = "!day!/test/" + argv[testInputIndex+1]
 
 with open(inputFile) as f:
     input = f.read().splitlines()
