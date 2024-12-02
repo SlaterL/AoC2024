@@ -1,5 +1,4 @@
 from sys import argv
-from copy import deepcopy
 
 input = []
 
@@ -13,10 +12,7 @@ with open(inputFile) as f:
 
 
 def parse(line):
-    line = line.split()
-    for i in range(len(line)):
-        line[i] = int(line[i])
-    return list(line)
+    return [int(i) for i in line.split()]
 
 
 def isSorted(report):
@@ -47,9 +43,7 @@ def part2():
             count += 1
         else:
             for i in range(len(report)):
-                c = deepcopy(report)
-                c.pop(i)
-                if isSafe(c):
+                if isSafe(report[:i]+report[i+1:]):
                     count += 1
                     break
     return count
