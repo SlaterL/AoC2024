@@ -32,12 +32,12 @@ func main() {
 	rootCmd.AddCommand(dayCmd)
 	rootCmd.PersistentFlags().StringP("session", "s", "53616c7465645f5f34b82f39e2d7865d94084c338aeb434b8c1d523807410ea4572825b767ea25ff5bbc4e9b4b384decedbd18a3ef013dccb1d96bcd8fc8a92f", "optional session token")
 	rootCmd.PersistentFlags().StringP("year", "y", "2024", "specify what year of AoC")
+	rootCmd.PersistentFlags().BoolP("files", "f", false, "only generate the file structure")
 
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
-
 }
 
 func runDay(command *cobra.Command, args []string) error {
@@ -52,11 +52,19 @@ func runDay(command *cobra.Command, args []string) error {
 		return yearErr
 	}
 
-	input, inputErr := getInput(day, year, session)
-	if inputErr != nil {
-		return inputErr
+	input := ""
+	var inputErr error
+	filesOnly, filesOnlyErr := command.Flags().GetBool("files")
+	if filesOnlyErr != nil {
+		return filesOnlyErr
 	}
-	fmt.Println("Got Input")
+	if !filesOnly {
+		input, inputErr = getInput(day, year, session)
+		if inputErr != nil {
+			return inputErr
+		}
+		fmt.Println("Got Input")
+	}
 
 	createFileStructure(day, input)
 	fmt.Println("Created File Structure")

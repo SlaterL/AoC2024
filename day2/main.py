@@ -1,11 +1,15 @@
-from sys import argv
+import argparse
+
+parser = argparse.ArgumentParser(description="This script does something.")
+parser.add_argument("-t", "--testfile", help="Name of the test file")
+parser.add_argument("-p", "--part", help="Specify only one part to run")
+args = parser.parse_args()
 
 input = []
 
 inputFile = "day2/test/input.txt"
-if "-t" in argv:
-    testInputIndex = argv.index("-t")
-    inputFile = "day2/test/" + argv[testInputIndex+1]
+if args.testfile:
+    inputFile = "day2/test/" + args.testfile
 
 with open(inputFile) as f:
     input = f.read().splitlines()
@@ -50,12 +54,12 @@ def part2():
 
 
 def main():
-    if "-p1" in argv:
+    if not args.part:
         print("Part 1:", part1())
-    elif "-p2" in argv:
         print("Part 2:", part2())
-    else:
+    elif args.part == "1":
         print("Part 1:", part1())
+    elif args.part == "2":
         print("Part 2:", part2())
 
 
